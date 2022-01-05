@@ -12,6 +12,8 @@
       ></v-text-field>
     </v-card-title>
     <v-data-table
+      class="row-pointer"
+      @click:row="details"
       :headers="headers"
       :items="coins"
       :search="search"
@@ -31,8 +33,12 @@
           mdi-star
         </v-icon>
       </template>
-      <template v-slot:[`item.name`]="{ item }">
-        <div class="d-flex">
+      <template @click="details" v-slot:[`item.name`]="{ item }">
+        <div
+          @click="details(item.symbol)"
+          class="d-flex"
+          style="cursor: pointer"
+        >
           <img
             style="width: 20px; height: 20px"
             :src="item.image"
@@ -110,14 +116,22 @@ export default {
       this.$store.dispatch("favorites/removeCoinFromFavorites", coin);
       this.$store.commit("coins/CHANGE_FAV_VALUE", { coin, value: false });
     },
+    details(id) {
+      console.log(id);
+      this.$router.push(`coins/${id}`);
+    },
   },
   computed: mapState({
     coins: (state) => state.coins.coins,
   }),
 
   async created() {
-    this.$store.dispatch("favorites/initFavorites");
-    this.$store.dispatch("coins/getCoins").then(() => (this.isloading = false));
+    if (process.client) {
+      this.$store.dispatch("favorites/initFavorites");
+      this.$store
+        .dispatch("coins/getCoins")
+        .then(() => (this.isloading = false));
+    }
   },
 };
 </script>

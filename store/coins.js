@@ -16,21 +16,27 @@ export const mutations = {
 
 export const actions = {
   async getCoins({ commit, rootState }) {
-    const favs = rootState.favorites.favs;
+    const favs = JSON.parse(localStorage.getItem("favorites")) || [];
 
     return this.$axios
-      .get("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd")
+      .get("/api/v3/coins/markets?vs_currency=usd")
       .then((result) => {
+
+        //add favorite propertyName to coins
         const modifiedCoins = result.data.map((item) => {
           item.favorite = false;
           favs.forEach((fav) =>
-            item.id == fav.id ? (item.favorite = true) : false
+            item.id == fav ? (item.favorite = true) : false
           );
           return item;
         });
 
-        const updatedCoins = modifiedCoins.filter((item) =>favs.some((fav) =>(fav.id == item.id)));
-        localStorage.setItem("favorites", JSON.stringify(updatedCoins));
+        //get coin ids from modifiedCoins
+        const favCoinIds = modifiedCoins
+          .filter((item) => favs.some((fav) => fav == item.id))
+          .map((c) => c.id);
+
+        localStorage.setItem("favorites", JSON.stringify(favCoinIds));
         commit("MUTATE_COINS", modifiedCoins);
       })
       .catch((err) => {

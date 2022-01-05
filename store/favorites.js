@@ -16,29 +16,34 @@ export const mutations = {
   },
   ADD_FAVS_TO_LOCAL_STORAGE(state, fav) {
     const favs = JSON.parse(localStorage.getItem("favorites")) || [];
-    const isSaved = favs.some((f) => fav.id == f.id);
+    const isSaved = favs.some((f) => f.id == fav);
     if (isSaved) return;
     localStorage.setItem("favorites", JSON.stringify([...favs, fav]));
   },
   REMOVE_FAVS_FROM_LOCAL_STORAGE(state, fav) {
     const favs = JSON.parse(localStorage.getItem("favorites")) || [];
-    const index = favs.findIndex((c) => c.id == fav.id);
+    const index = favs.findIndex((id) => id == fav);
     favs.splice(index, 1);
     localStorage.setItem("favorites", JSON.stringify([...favs]));
   },
 };
 
 export const actions = {
-  initFavorites({ commit }) {
+  initFavorites({ commit, rootState }) {
     const favs = JSON.parse(localStorage.getItem("favorites")) || [];
-    commit("MUTATE_FAVS", favs);
+    const favorites = rootState.coins.coins.filter((coin) => {
+      return favs.some((f) => f == coin.id);
+    });
+    commit("MUTATE_FAVS", favorites);
   },
   addCoinToFavorites({ commit }, coin) {
-    commit("ADD_FAV", { ...coin, favorite: true });
-    commit("ADD_FAVS_TO_LOCAL_STORAGE", { ...coin, favorite: true });
+    // commit("ADD_FAV", { ...coin, favorite: true });
+    // commit("ADD_FAVS_TO_LOCAL_STORAGE", { ...coin, favorite: true });
+    commit("ADD_FAV", coin.id);
+    commit("ADD_FAVS_TO_LOCAL_STORAGE", coin.id);
   },
   removeCoinFromFavorites({ commit }, coin) {
     commit("REMOVE_FAV", coin);
-    commit("REMOVE_FAVS_FROM_LOCAL_STORAGE", coin);
+    commit("REMOVE_FAVS_FROM_LOCAL_STORAGE", coin.id);
   },
 };
