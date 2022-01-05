@@ -1,6 +1,6 @@
 <template>
   <v-card class="elevation-0">
-    <v-card-title>
+    <v-card-title v-if="showTableTitle">
       Favorite Coins <v-icon color="yellow darken-2"> mdi-star </v-icon>
       <v-spacer></v-spacer>
       <v-text-field
@@ -34,7 +34,7 @@
         </v-icon>
       </template>
       <template v-slot:[`item.name`]="{ item }">
-        <div @click="details(item.symbol)" class="d-flex" style="cursor: pointer">
+        <div @click="details(item.id)" class="d-flex" style="cursor: pointer">
           <img
             style="width: 20px; height: 20px"
             :src="item.image"
@@ -58,19 +58,7 @@
         {{ formatToCurrency(item.total_volume) }}
       </template>
       <template v-slot:[`item.chartVolumes`]="{ item }">
-        <v-sparkline
-          style="min-width: 100px"
-          :value="item.chartVolumes"
-          :smooth="10"
-          :padding="8"
-          :line-width="2"
-          stroke-linecap="round"
-          gradient-direction="top"
-          :fill="false"
-          type="trend"
-          :auto-line-width="false"
-          auto-draw
-        ></v-sparkline>
+        <Chart :volumes="item.chartVolumes" />
       </template>
     </v-data-table>
   </v-card>
@@ -119,6 +107,10 @@ export default {
   props: {
     hideSearchBar: Boolean,
     hideTableFooter: Boolean,
+    showTableTitle:{
+      type:Boolean,
+      default:true
+    }
   },
   methods: {
     formatToCurrency(num) {
@@ -148,10 +140,10 @@ export default {
 
   async created() {
     if (process.client) {
-      this.$store.dispatch("coins/getCoins").then(() => {
+      this.$store.dispatch("coins/fetchCoins").then(() => {
         this.isloading = false;
         this.$store.dispatch("favorites/initFavorites");
-        this.$store.dispatch("chart/getAllCharts");
+        this.$store.dispatch("chart/fetchAllCharts");
       });
     }
   },

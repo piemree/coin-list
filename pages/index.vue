@@ -1,7 +1,7 @@
 <template>
   <v-row justify="center" align="center">
-    <v-col cols="12">
-      <FavoriteCoins :hideSearchBar="true" :hideTableFooter="true" />
+    <v-col cols="12" sm="12" md="6" lg="9">
+      <FavoriteCoins :hideSearchBar="true" :showTableTitle="false" />
       <News :news="news" />
     </v-col>
   </v-row>

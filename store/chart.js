@@ -1,40 +1,52 @@
 import Vue from "vue";
 export const state = () => ({
   chartValues: [],
+  singeCoinChartValues: {},
 });
 
 export const mutations = {
-  MUTATE_COINS(state, coins) {
-    Vue.set(state, "coins", [...coins]);
-  },
-  CHANGE_FAV_VALUE(state, { coin, value }) {
-    const index = state.coins.findIndex((c) => c.id == coin.id);
-    //Vue.set(object, propertyName, value)
-    Vue.set(state.coins[index], "favorite", value);
+  MUTATE_SINGLE_COIN_CHART_VALUES(state, values) {
+    Vue.set(state, "singeCoinChartValues", {...values});
   },
   ADD_CHART_VALUE(state, value) {
     state.chartValues.push(value);
   },
-  CLEAN_CHARTS(state) {
+  CLEAR_CHARTS(state) {
     state.chartValues = [];
   },
+  CLEAR_SINGLE_CHARTS(state) {
+    state.singeCoinChartValues = [];
+  },  
 };
 
 export const actions = {
-  async getFavoriteCoinChart({ commit, rootState }, id) {
+  async fetchFavoriteCoinChart({ commit, rootState }, id) {
     if (!id) return;
     this.$axios
-      .get(`/api/v3/coins/${id}/market_chart?vs_currency=usd&days=24`)
+      .get(`/coinapi/v3/coins/${id}/market_chart?vs_currency=usd&days=24`)
       .then((result) => {
         const priceVolumes = result.data.prices.map((price) => price[1]);
         commit("ADD_CHART_VALUE", { id, volumes: priceVolumes });
       })
       .catch((err) => {});
   },
-  getAllCharts({ rootState, commit, dispatch }) {
-    commit("CLEAN_CHARTS");
+  fetchAllCharts({ rootState, commit, dispatch }) {
+    commit("CLEAR_CHARTS");
     rootState.favorites.favs.forEach(({ id }) => {
-      dispatch("getFavoriteCoinChart", id);
+      dispatch("fetchFavoriteCoinChart", id);
     });
+  },
+  fetchCoinChartByTime({ commit }, { time, id }) {
+    commit("CLEAR_SINGLE_CHARTS")
+    this.$axios
+      .get(`/coinapi/v3/coins/${id}/market_chart?vs_currency=usd&days=${time}`)
+      .then((result) => {
+        const priceVolumes = result.data.prices.map((price) => price[1]);
+        commit("MUTATE_SINGLE_COIN_CHART_VALUES", {
+          id,
+          volumes: priceVolumes,
+        });
+      })
+      .catch((err) => {});
   },
 };

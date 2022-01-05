@@ -16,7 +16,7 @@ export const mutations = {
 export const actions = {
   async getNews({ commit, rootState }) {
     this.$axios
-      .get("http://localhost:3000/myapi/news")
+      .get("/api/news")
       .then((result) => {
         commit("MUTATE_NEWS", result.data.results);
       })
@@ -24,11 +24,11 @@ export const actions = {
         console.log(err);
       });
   },
-  async getNewsByCoin({ commit, rootState }, symbol) {
+  async getNewsByCoin({ commit, rootState }, id) {
+    const {symbol}=rootState.coins.coins.find(c => c.id==id)
     this.$axios
-      .get(`http://localhost:3000/myapi/news/${symbol}`)
+      .get(`/api/news/${symbol}`)
       .then((result) => {
-        console.log(result)
         commit("MUTATE_SINGLE_COIN_NEWS", result.data.results);
       })
       .catch((err) => {

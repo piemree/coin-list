@@ -1,5 +1,11 @@
 import colors from "vuetify/es5/util/colors";
 require("dotenv").config();
+let hostName="http://localhost";
+let portNumber=3000
+if (process.env.NODE_ENV = 'production') {
+  hostName=process.env.HOST
+  portNumber=process.env.PORT
+}
 export default {
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
   ssr: true,
@@ -41,7 +47,7 @@ export default {
     "@nuxtjs/axios",
   ],
   server: {
-    port: 3000,
+    port: portNumber,
   },
   serverMiddleware: ["~/api"],
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
@@ -49,8 +55,12 @@ export default {
     proxy: true, // Can be also an object with default options
   },
   proxy: {
-    "/api/": {
+    "/coinapi/": {
       target: "https://api.coingecko.com/api",
+      pathRewrite: { "^/coinapi/": "" },
+    },
+    "/api/": {
+      target: `${hostName}:${portNumber}/api`,
       pathRewrite: { "^/api/": "" },
     },
   },

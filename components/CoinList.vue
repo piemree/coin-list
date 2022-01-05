@@ -13,7 +13,6 @@
     </v-card-title>
     <v-data-table
       class="row-pointer"
-      @click:row="details"
       :headers="headers"
       :items="coins"
       :search="search"
@@ -33,9 +32,9 @@
           mdi-star
         </v-icon>
       </template>
-      <template @click="details" v-slot:[`item.name`]="{ item }">
+      <template v-slot:[`item.name`]="{ item }">
         <div
-          @click="details(item.symbol)"
+          @click="details(item.id)"
           class="d-flex"
           style="cursor: pointer"
         >
@@ -117,7 +116,6 @@ export default {
       this.$store.commit("coins/CHANGE_FAV_VALUE", { coin, value: false });
     },
     details(id) {
-      console.log(id);
       this.$router.push(`coins/${id}`);
     },
   },
@@ -129,7 +127,7 @@ export default {
     if (process.client) {
       this.$store.dispatch("favorites/initFavorites");
       this.$store
-        .dispatch("coins/getCoins")
+        .dispatch("coins/fetchCoins")
         .then(() => (this.isloading = false));
     }
   },

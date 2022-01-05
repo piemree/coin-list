@@ -1,17 +1,19 @@
+require("dotenv").config()
 const express = require("express");
 const app = express();
 const axios = require("axios");
-const newsApiToken = "7b871bf49ae28bfdb7f2a5b3d9a78aea40bd75db";
-const cors = require('cors');
-app.use(cors())
+const newsApiToken = process.env.NEWS_TOKEN;
+const cors = require("cors");
+
+app.use(express.json());
+app.use(cors());
+
 app.get("/test", (req, res) => {
   res.send("crypto api");
 });
 app.get("/news", (req, res) => {
   axios
-    .get(
-      `https://cryptopanic.com/api/v1/posts/?auth_token=${newsApiToken}`
-    )
+    .get(`https://cryptopanic.com/api/v1/posts/?auth_token=${newsApiToken}`)
     .then((result) => {
       res.send(result.data);
     })
@@ -20,22 +22,22 @@ app.get("/news", (req, res) => {
     });
 });
 app.get("/news/:coin", (req, res) => {
-  const coin = req.params.coin.toUpperCase();
-  console.log(coin);
+  const coin = req.params.coin.toString().toUpperCase();
   axios
     .get(
-      `https://cryptopanic.com/api/v1/posts/?auth_token=${newsApiToken}&currencies=${coin}}`
+      `https://cryptopanic.com/api/v1/posts/?auth_token=${newsApiToken}&currencies=${coin}`
     )
     .then((result) => {
-      res.send(result);
+      const data = result.data
+      res.json({ ...data });
     })
     .catch((err) => {
       console.log(err);
-      res.status(500).send(err);
+      res.send(err);
     });
 });
 
 module.exports = {
-    path: '/myapi',
-    handler: app,
-  }
+  path: "/api",
+  handler: app,
+};

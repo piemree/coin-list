@@ -15,13 +15,12 @@ export const mutations = {
 };
 
 export const actions = {
-  async getCoins({ commit, rootState }) {
+  async fetchCoins({ commit, rootState ,state}) {
     const favs = JSON.parse(localStorage.getItem("favorites")) || [];
 
     return this.$axios
-      .get("/api/v3/coins/markets?vs_currency=usd")
+      .get("/coinapi/v3/coins/markets?vs_currency=usd")
       .then((result) => {
-
         //add favorite propertyName to coins
         const modifiedCoins = result.data.map((item) => {
           item.favorite = false;

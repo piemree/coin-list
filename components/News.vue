@@ -2,7 +2,7 @@
   <v-card class="mx-auto elevation-0">
     <v-card-title primary-title> Cryptocurrency News </v-card-title>
     <v-list three-line>
-      <div v-for="(item, index) in news" :key="item.title">
+      <div v-for="(item, index) in news" :key="item.id">
         <v-list-item :ripple="false" background-color="white">
           <template>
             <v-list-item-content class="d-flex">
@@ -11,8 +11,8 @@
                   class="text--grey mt-2 text-right"
                   v-text="formatTime(item.created_at)"
                 ></v-list-item-subtitle>
-                <v-list-item-title class="text-wrap font-weight-medium">
-                  <a style="color: black;text-decoration: none" :href="item.url"  target="_blank">{{ item.title }}</a></v-list-item-title
+                <v-list-item-title :class="{'subtitle-2': $vuetify.breakpoint. smAndDown, 'h6': $vuetify.breakpoint. mdAndUp}" class="text-wrap font-weight-bold my-2">
+                  <a  style="color: black;text-decoration: none" :href="item.url"  target="_blank">{{ item.title }}</a></v-list-item-title
                 >
               </div>
 
@@ -20,7 +20,8 @@
                 <a
                   v-for="(currency, i) in item.currencies"
                   :key="i"
-                  class="ml-2 mt-1 font-weight-bold"
+                  class="ml-2 mt-1 subtitle-2"
+                  :class="{'subtitle-2': $vuetify.breakpoint. smAndDown, 'body-1': $vuetify.breakpoint. mdAndUp}"
                   style="text-decoration: none"
                   :href="currency.url"
                   target="_blank"
