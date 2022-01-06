@@ -17,6 +17,7 @@
       :items="coins"
       :search="search"
       :loading="isloading"
+      :items-per-page="50"
       loading-text="Loading... Please wait"
       item-key="id"
     >
