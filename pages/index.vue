@@ -1,15 +1,15 @@
 <template>
   <v-row justify="center" align="center">
     <v-col cols="12" sm="12" md="12" lg="9">
-      <FavoriteCoins
-        v-if="favs.length > 0"
-        :hideSearchBar="true"
-        :showTableTitle="false"
-      />
-      <p v-else>
+      <p v-if="favs.length <= 0">
         It seems you don't have a favorite coin. You can view all coins
         <a @click="$router.push('coins')">here.</a>
       </p>
+      <FavoriteCoins
+        v-show="favs.length > 0"
+        :hideSearchBar="true"
+        :showTableTitle="false"
+      />
       <News :news="news" />
     </v-col>
   </v-row>
