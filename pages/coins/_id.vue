@@ -1,6 +1,6 @@
 <template>
   <v-row justify="center" align="center">
-    <v-col cols="12" sm="12" md="6" lg="9">
+    <v-col cols="12" sm="12" md="9" lg="9">
       <!-- <v-card v-if="coin" class="mx-auto elevation-0" outlined>
         <v-list-item three-line>
           <v-list-item-content>
@@ -48,21 +48,21 @@
       </v-card> -->
 
       <IdCard :coin="coin" :coinId="$route.params.id" />
-      <v-card class="my-4" elevation="0" outlined>
+      <v-card :loading="loading" class="my-4" elevation="0" outlined>
+        <v-card-actions class="mb-5">
+          <v-btn-toggle v-model="toggle_exclusive">
+            <v-btn height="25"> 24h </v-btn>
+
+            <v-btn height="25"> 7d </v-btn>
+
+            <v-btn height="25"> 1m </v-btn>
+
+            <v-btn height="25"> 1y </v-btn>
+          </v-btn-toggle>
+        </v-card-actions>
         <div>
           <Chart v-if="chartVolumes" :volumes="chartVolumes" />
         </div>
-        <v-card-actions>
-          <v-btn-toggle v-model="toggle_exclusive">
-            <v-btn> 24h </v-btn>
-
-            <v-btn> 7d </v-btn>
-
-            <v-btn> 1m </v-btn>
-
-            <v-btn> 1y </v-btn>
-          </v-btn-toggle>
-        </v-card-actions>
       </v-card>
 
       <News :news="news" />
@@ -78,6 +78,7 @@ export default {
   data() {
     return {
       toggle_exclusive: 0,
+      loading: false,
     };
   },
   computed: mapState({
@@ -90,14 +91,16 @@ export default {
         })[0] || {}
       );
     },
-    chartVolumes: (state) => state.chart.singeCoinChartValues.volumes,
+    chartVolumes: (state)=>state.chart.singeCoinChartValues.volumes,
   }),
   methods: {
-    fetchChartValues(time) {
-      this.$store.dispatch("chart/fetchCoinChartByTime", {
+    async fetchChartValues(time) {
+      this.loading = true;
+      await this.$store.dispatch("chart/fetchCoinChartByTime", {
         time,
         id: this.coin.id,
       });
+      this.loading = false;
     },
   },
   watch: {

@@ -1,7 +1,15 @@
 <template>
   <v-row justify="center" align="center">
-    <v-col cols="12" sm="12" md="6" lg="9">
-      <FavoriteCoins :hideSearchBar="true" :showTableTitle="false" />
+    <v-col cols="12" sm="12" md="12" lg="9">
+      <FavoriteCoins
+        v-if="favs.length > 0"
+        :hideSearchBar="true"
+        :showTableTitle="false"
+      />
+      <p v-else>
+        It seems you don't have a favorite coin. You can view all coins
+        <a @click="$router.push('coins')">here.</a>
+      </p>
       <News :news="news" />
     </v-col>
   </v-row>
@@ -18,6 +26,7 @@ export default {
   },
   computed: mapState({
     news: (state) => state.news.news,
+    favs: (state) => state.favorites.favs,
   }),
   components: { News },
 };

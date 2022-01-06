@@ -38,7 +38,7 @@ export const actions = {
   },
   fetchCoinChartByTime({ commit }, { time, id }) {
     commit("CLEAR_SINGLE_CHARTS")
-    this.$axios
+   return this.$axios
       .get(`/coinapi/v3/coins/${id}/market_chart?vs_currency=usd&days=${time}`)
       .then((result) => {
         const priceVolumes = result.data.prices.map((price) => price[1]);
@@ -47,6 +47,6 @@ export const actions = {
           volumes: priceVolumes,
         });
       })
-      .catch((err) => {});
+      .catch((err) => {console.log(err);});
   },
 };
