@@ -23,7 +23,7 @@ export const actions = {
   async fetchFavoriteCoinChart({ commit, rootState }, id) {
     if (!id) return;
     this.$axios
-      .get(`/coinapi/v3/coins/${id}/market_chart?vs_currency=usd&days=24`)
+      .get(`/coinapi/v3/coins/${id}/market_chart?vs_currency=usd&days=1`)
       .then((result) => {
         const priceVolumes = result.data.prices.map((price) => price[1]);
         commit("ADD_CHART_VALUE", { id, volumes: priceVolumes });
