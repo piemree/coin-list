@@ -60,7 +60,7 @@ export default {
       pathRewrite: { "^/coinapi/": "" },
     },
     "/api/": {
-      target: `${hostName}:${portNumber}/api`,
+      target: `${hostName}/api`,
       pathRewrite: { "^/api/": "" },
     },
   },
