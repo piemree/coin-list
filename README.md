@@ -1,4 +1,4 @@
-# crypro-case
+# crypto-case
 
 ## Build Setup
 
