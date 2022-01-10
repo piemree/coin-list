@@ -5,12 +5,12 @@
         It seems you don't have a favorite coin. You can view all coins
         <a @click="$router.push('coins')">here.</a>
       </p>
-      <FavoriteCoins
+      <LazyFavoriteCoins
         v-show="favs.length > 0"
         :hideSearchBar="true"
         :showTableTitle="false"
       />
-      <News :news="news" />
+      <LazyNews :news="news" />
     </v-col>
   </v-row>
 </template>
