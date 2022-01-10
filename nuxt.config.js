@@ -1,10 +1,10 @@
 import colors from "vuetify/es5/util/colors";
 require("dotenv").config();
-let hostName="http://localhost";
-let portNumber=3000
-if (process.env.NODE_ENV = 'production') {
-  hostName=process.env.HOST
-  portNumber=process.env.PORT
+let hostName = "http://localhost";
+let portNumber = 3000;
+if ((process.env.NODE_ENV = "production")) {
+  hostName = process.env.HOST;
+  portNumber = process.env.PORT;
 }
 export default {
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
@@ -12,8 +12,8 @@ export default {
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    titleTemplate: "%s - crypro-case",
-    title: "crypro-case",
+    titleTemplate: "%s - crypto",
+    title: "Case",
     htmlAttrs: {
       lang: "en",
     },
@@ -24,7 +24,6 @@ export default {
       { name: "format-detection", content: "telephone=no" },
     ],
     link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }],
-    
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
